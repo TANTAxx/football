@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,7 +29,25 @@ public class LeagueService {
     }
 
     public League create(League league) {
-        return leagueRepository.save(league);
+        try {
+            log.info("idebe");
+            List<League> leagues = findAllLeague();
+            log.info("idebe" + leagues);
+            for (int i = leagues.size() - 1; i >= 0; i--) {
+                log.info("idebe2");
+                if (league.getLeagueName().equals(leagues.get(i).getLeagueName())) {
+                    log.info("League name reserved!");
+                    return null;
+                } else {
+                    log.info("New league save -> {} ", league);
+                    return leagueRepository.save(league);
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            throw new NotFoundException("");
+        }
+        return null;
     }
 
     public League update(League league) {
@@ -48,31 +67,32 @@ public class LeagueService {
         }
     }
 
-    public League findById(Long id) {
-        log.info("Find by id: {} ", id);
-        return leagueRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("League not found by id: " + id));
-    }
-
     public void deleteById(Long id) {
         leagueRepository.deleteById(id);
     }
 
     public League getByLeagueName(String leagueName) {
-        Optional<League> leagueOptional = leagueRepository.findByLeagueName(leagueName);
-        if (leagueOptional.isPresent()) {
-            return toEntity(leagueOptional.get());
-        } else {
-            throw new NotFoundException(INVALID_LEAGUE_NAME_OR_NATIONALITY);
-        }
+        League leagueOptional = leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new NotFoundException("Not found league name " + leagueName));
+        return toEntity(leagueOptional);
     }
 
-    public LeagueDto entityToDto(League league) {
+    public League getByName(String leagueName) {
+        return leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new NotFoundException("Not found league name " + leagueName));
+    }
+
+
+    private LeagueDto entityToDto(League league) {
         return leagueMapper.toDto(league);
     }
 
-    public League toEntity(League league) {
+    private League toEntity(League league) {
         LeagueDto leagueDto = entityToDto(league);
         return leagueMapper.toEntity(leagueDto);
+    }
+
+    public League getByLeagueNationality(String nationality) {
+        return leagueRepository.findByNationality(nationality);
     }
 }

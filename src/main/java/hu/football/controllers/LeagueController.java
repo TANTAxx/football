@@ -48,8 +48,5 @@ public class LeagueController {
         leagueService.deleteById(id);
     }
 
-    @GetMapping(path = "/try")
-    public League tryToDto(@RequestBody League league) {
-        return leagueService.toEntity(league);
-    }
+
 }

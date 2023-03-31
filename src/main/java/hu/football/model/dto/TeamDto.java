@@ -21,6 +21,4 @@ public class TeamDto {
 
     private String league;
 
-    private LeagueDto leagueDto;
-
 }

@@ -2,6 +2,7 @@ package hu.football.services;
 
 import hu.football.exceptions.NotFoundException;
 import hu.football.model.dto.TeamDto;
+import hu.football.model.entities.League;
 import hu.football.model.entities.Team;
 import hu.football.respositories.TeamRepository;
 import lombok.AllArgsConstructor;
@@ -34,18 +35,26 @@ public class TeamService {
     }
 
     public Team saveTeam(TeamDto teamDto) {
-        Team team = new Team(
-                teamDto.getNationality(),
-                teamDto.getTeamName(),
-                teamDto.getFounded(),
-                teamDto.getAddress(),
-                teamDto.getStadium(),
-                leagueService.getByLeagueName(teamDto.getLeague())
-        );
 
-        log.info("Team save : {}", team);
+        List<League> leagues = leagueService.findAllLeague();
+        for (int i = 0; i < leagues.size(); i++) {
+            if (leagues.get(i).equals(teamDto.getLeague())) {
+                return null;
+            } else {
+                Team team = new Team(
+                        leagueService.getByLeagueNationality(teamDto.getNationality()),
+                        teamDto.getTeamName(),
+                        teamDto.getFounded(),
+                        teamDto.getAddress(),
+                        teamDto.getStadium(),
+                        leagueService.getByLeagueName(teamDto.getLeague())
+                );
+                log.info("Team save : {}", team);
 
-        return teamRepository.save(team);
+                return teamRepository.save(team);
+            }
+        }
+        return null;
     }
 
     public Team update(Team team) {

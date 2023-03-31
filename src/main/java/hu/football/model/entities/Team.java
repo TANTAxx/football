@@ -20,7 +20,9 @@ public class Team {
     @GeneratedValue(strategy = SEQUENCE)
     private Long id;
 
-    private String nationality;
+    @OneToOne
+    @JoinColumn(name = "nationality")
+    private League nationality;
 
     private String teamName;
 
@@ -32,11 +34,11 @@ public class Team {
     private String stadium;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "leagueName")
+    @JoinColumn(name = "league_name")
     private League league;
 
 
-    public Team(String nationality, String teamName, String founded, String address, String stadium, League league) {
+    public Team(League nationality, String teamName, String founded, String address, String stadium, League league) {
         this.nationality = nationality;
         this.teamName = teamName;
         this.founded = founded;

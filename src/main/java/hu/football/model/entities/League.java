@@ -1,5 +1,6 @@
 package hu.football.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,6 +17,7 @@ import lombok.*;
 public class League {
 
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
@@ -34,9 +36,5 @@ public class League {
     @Column(name = "league_name")
     private String leagueName;
 
-    public League(String leagueName, String nationality, String numberOfTeams) {
-        this.leagueName = leagueName;
-        this.nationality = nationality;
-        this.numberOfTeams = numberOfTeams;
-    }
+
 }
