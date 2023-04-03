@@ -26,6 +26,7 @@ public class CoachService {
 
     public Coach create(CoachDto coachDto) {
 
+        log.info("Coach save: ");
         Coach coach =  new Coach(
                 coachDto.getFirstName(),
                 coachDto.getLastName(),
@@ -36,6 +37,7 @@ public class CoachService {
                 coachDto.getDateOfBirth(),
                 teamService.getByTeamName(coachDto.getTeam())
         );
+        log.info("Coach Saved: {}", coachDto);
 
         return coachRepository.save(coach);
     }

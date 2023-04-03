@@ -25,17 +25,23 @@ public class LeagueService {
     private final LeagueMapper leagueMapper;
 
     public List<League> findAllLeague() {
+
         return leagueRepository.findAll();
     }
 
     public League create(League league) {
-        return leagueRepository.save(league);
+        if (!leagueRepository.existsByLeagueName(league.getLeagueName())) {
+            return leagueRepository.save(league);
+        } else {
+            return null;
+        }
     }
 
     public League update(League league) {
         if (Objects.isNull(league.getLeagueName()) && Objects.isNull(league.getNationality())) {
             throw new NotFoundException(INVALID_LEAGUE_NAME_OR_NATIONALITY);
         } else {
+            log.info("Save ág: {}", league);
             return leagueRepository.save(league);
         }
     }
@@ -54,15 +60,25 @@ public class LeagueService {
     }
 
     public League getByLeagueName(String leagueName) {
-        return leagueRepository.findByLeagueName(leagueName)
-                .orElseThrow(() -> new NotFoundException("Not found league name " + leagueName));
+        Optional<League> leagueNameOp = leagueRepository.findByLeagueName(leagueName);
+        leagueNameOp.orElseThrow(() -> new NotFoundException("Not found league name " + leagueName));
+
+        if (leagueNameOp.isPresent()) {
+            return leagueNameOp.get();
+        } else {
+            return null;
+        }
     }
 
     public League getByName(String leagueName) {
-        League league = leagueRepository.findByLeagueName(leagueName)
-                .orElseThrow(() -> new NotFoundException("Not found league name " + leagueName));
+        Optional<League> league = leagueRepository.findByLeagueName(leagueName);
+        league.orElseThrow(() -> new NotFoundException("Not found league name " + leagueName));
 
-        return toEntity(league);
+        if (league.isPresent()) {
+            return toEntity(league.get());
+        } else {
+            return null;
+        }
     }
 
 
@@ -76,6 +92,18 @@ public class LeagueService {
     }
 
     public League getByLeagueNationality(String nationality) {
-        return leagueRepository.findByNationality(nationality);
+        Optional<League> leagueOptional = leagueRepository.findByNationality(nationality);
+
+        if (leagueOptional.isPresent()) {
+            return leagueOptional.get();
+        } else {
+            return null;
+        }
+    }
+
+    public League getLeagueEquals(String leagueName) {
+        return leagueRepository.findByLeagueNameEquals(leagueName);
     }
 }
+
+

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static hu.football.constants.ErrorConstants.INVALID_FIRST_NAME_OR_LAST_NAME;
 import static hu.football.constants.ErrorConstants.INVALID_TEAM_NAME;
@@ -28,46 +29,32 @@ public class TeamService {
     }
 
     public Team getByTeamName(String teamName) {
-        if (Objects.isNull(teamName)) {
-            throw new NotFoundException(INVALID_TEAM_NAME);
+        Optional<Team> teamOptional = teamRepository.findByTeamName(teamName);
+
+        if (teamOptional.isPresent()) {
+            return teamOptional.get();
         } else {
-            return teamRepository.findByTeamName(teamName);
+            return null;
         }
     }
 
 
     public Team saveTeam(TeamDto teamDto) {
-/*
-        List<League> leagues = leagueService.findAllLeague();
-        for (int i = 0; i < leagues.size(); i++) {
-            if (leagues.get(i).equals(teamDto.getLeague())) {
-                return null;
-            } else {
-                Team team = new Team(
-                        leagueService.getByLeagueNationality(teamDto.getNationality()),
-                        teamDto.getTeamName(),
-                        teamDto.getFounded(),
-                        teamDto.getAddress(),
-                        teamDto.getStadium(),
-                        leagueService.getByLeagueName(teamDto.getLeague())
-                );
-                log.info("Team save : {}", team);
-
-                return teamRepository.save(team);
-            }
+        if (!teamRepository.existsByTeamName(teamDto.getTeamName())) {
+            log.info("Team save: ");
+            Team team = new Team(
+                    leagueService.getByLeagueNationality(teamDto.getNationality()),
+                    teamDto.getTeamName(),
+                    teamDto.getFounded(),
+                    teamDto.getAddress(),
+                    teamDto.getStadium(),
+                    leagueService.getByLeagueName(teamDto.getLeague())
+            );
+            log.info("Team saved: {}", team);
+            return teamRepository.save(team);
+        } else {
+            return null;
         }
-        return null;
- */
-        Team team = new Team(
-                leagueService.getByLeagueNationality(teamDto.getNationality()),
-                teamDto.getTeamName(),
-                teamDto.getFounded(),
-                teamDto.getAddress(),
-                teamDto.getStadium(),
-                leagueService.getByLeagueName(teamDto.getLeague())
-        );
-
-        return teamRepository.save(team);
     }
 
     public Team update(Team team) {

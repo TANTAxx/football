@@ -37,6 +37,9 @@ public class LeagueController {
         return ResponseEntity.status(201).body(leagueService.create(league));
     }
 
+
+
+
     @PutMapping(path = "/update")
     public ResponseEntity<League> updateLeague(@RequestBody League league) {
         return ResponseEntity.ok(leagueService.update(league));
@@ -49,4 +52,8 @@ public class LeagueController {
     }
 
 
+    @GetMapping(path = "/equals")
+    public League getLeague(@RequestParam(name = "leagueName") String leagueName) {
+        return leagueService.getLeagueEquals(leagueName);
+    }
 }

@@ -31,7 +31,7 @@ public class TeamController {
     }
 
 
-    @PostMapping(path = "/save")
+    @PostMapping
     public ResponseEntity<Team> saveTeam(@RequestBody TeamDto teamDto) {
         return ResponseEntity.status(201).body(teamService.saveTeam(teamDto));
     }

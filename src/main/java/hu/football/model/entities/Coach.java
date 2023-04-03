@@ -62,7 +62,8 @@ public class Coach {
     @JsonIgnore
     private String weight;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "teamName")
     private Team team;
 
 
@@ -73,8 +74,7 @@ public class Coach {
                  String placeOfBirth,
                  String countryOfBirth,
                  String dateOfBirth,
-                 Team team)
-    {
+                 Team team) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nationality = nationality;

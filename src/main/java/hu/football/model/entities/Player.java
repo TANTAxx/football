@@ -70,7 +70,6 @@ public class Player {
     private String foot;
 
     @NotNull
-    @NotBlank
     @OneToOne(cascade = CascadeType.ALL)
     private Team team;
 
