@@ -69,8 +69,8 @@ public class Player {
     @NotBlank
     private String foot;
 
-    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "teamName")
     private Team team;
 
     public Player(String firstName,

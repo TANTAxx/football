@@ -1,6 +1,8 @@
 package hu.football.services;
 
 import hu.football.exceptions.NotFoundException;
+import hu.football.exceptions.ValidationException;
+import hu.football.model.dto.FieldError;
 import hu.football.model.dto.LeagueDto;
 import hu.football.model.dto.TeamDto;
 import hu.football.model.entities.League;
@@ -8,8 +10,10 @@ import hu.football.model.entities.Team;
 import hu.football.respositories.TeamRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.NestedExceptionUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,7 +43,7 @@ public class TeamService {
     }
 
 
-    public Team saveTeam(TeamDto teamDto) {
+    public void saveTeam(TeamDto teamDto) {
         if (!teamRepository.existsByTeamName(teamDto.getTeamName())) {
             log.info("Team save: ");
             Team team = new Team(
@@ -51,9 +55,9 @@ public class TeamService {
                     leagueService.getByLeagueName(teamDto.getLeague())
             );
             log.info("Team saved: {}", team);
-            return teamRepository.save(team);
+            teamRepository.save(team);
         } else {
-            return null;
+            throw new ValidationException(Collections.singletonList(new FieldError("Team Name", "Duplicated Team Name")));
         }
     }
 
