@@ -33,9 +33,8 @@ public class TeamController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveTeam(@RequestBody TeamDto teamDto) {
-        teamService.saveTeam(teamDto);
-        log.info("Saved Successfully");
+    public ResponseEntity<Team> saveTeam(@RequestBody TeamDto teamDto) {
+        return ResponseEntity.status(201).body(teamService.saveTeam(teamDto));
     }
 
     @PutMapping(path = "/update")
@@ -45,7 +44,7 @@ public class TeamController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id){
+    public void deleteById(@PathVariable Long id) {
         teamService.deleteById(id);
     }
 }

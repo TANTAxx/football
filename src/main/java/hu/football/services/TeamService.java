@@ -43,7 +43,7 @@ public class TeamService {
     }
 
 
-    public void saveTeam(TeamDto teamDto) {
+    public Team saveTeam(TeamDto teamDto) {
         if (!teamRepository.existsByTeamName(teamDto.getTeamName())) {
             log.info("Team save: ");
             Team team = new Team(
@@ -55,7 +55,7 @@ public class TeamService {
                     leagueService.getByLeagueName(teamDto.getLeague())
             );
             log.info("Team saved: {}", team);
-            teamRepository.save(team);
+          return teamRepository.save(team);
         } else {
             throw new ValidationException(Collections.singletonList(new FieldError("Team Name", "Duplicated Team Name")));
         }
