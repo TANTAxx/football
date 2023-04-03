@@ -1,6 +1,7 @@
 package hu.football.services;
 
 import hu.football.exceptions.NotFoundException;
+import hu.football.model.dto.CoachDto;
 import hu.football.model.entities.Coach;
 import hu.football.respositories.CoachRepository;
 import lombok.AllArgsConstructor;
@@ -17,12 +18,25 @@ import static hu.football.constants.ErrorConstants.INVALID_FIRST_NAME_OR_LAST_NA
 @AllArgsConstructor
 public class CoachService {
     private final CoachRepository coachRepository;
+    private final TeamService teamService;
 
     public List<Coach> findAllCoach() {
         return coachRepository.findAll();
     }
 
-    public Coach create(Coach coach) {
+    public Coach create(CoachDto coachDto) {
+
+        Coach coach =  new Coach(
+                coachDto.getFirstName(),
+                coachDto.getLastName(),
+                coachDto.getNationality(),
+                coachDto.getAge(),
+                coachDto.getPlaceOfBirth(),
+                coachDto.getCountryOfBirth(),
+                coachDto.getDateOfBirth(),
+                teamService.getByTeamName(coachDto.getTeam())
+        );
+
         return coachRepository.save(coach);
     }
 

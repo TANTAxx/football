@@ -1,6 +1,7 @@
 package hu.football.services;
 
 import hu.football.exceptions.NotFoundException;
+import hu.football.model.dto.LeagueDto;
 import hu.football.model.dto.TeamDto;
 import hu.football.model.entities.League;
 import hu.football.model.entities.Team;
@@ -26,7 +27,7 @@ public class TeamService {
         return teamRepository.findAll();
     }
 
-    public List<Team> getByTeamName(String teamName) {
+    public Team getByTeamName(String teamName) {
         if (Objects.isNull(teamName)) {
             throw new NotFoundException(INVALID_TEAM_NAME);
         } else {
@@ -34,8 +35,9 @@ public class TeamService {
         }
     }
 
-    public Team saveTeam(TeamDto teamDto) {
 
+    public Team saveTeam(TeamDto teamDto) {
+/*
         List<League> leagues = leagueService.findAllLeague();
         for (int i = 0; i < leagues.size(); i++) {
             if (leagues.get(i).equals(teamDto.getLeague())) {
@@ -55,6 +57,17 @@ public class TeamService {
             }
         }
         return null;
+ */
+        Team team = new Team(
+                leagueService.getByLeagueNationality(teamDto.getNationality()),
+                teamDto.getTeamName(),
+                teamDto.getFounded(),
+                teamDto.getAddress(),
+                teamDto.getStadium(),
+                leagueService.getByLeagueName(teamDto.getLeague())
+        );
+
+        return teamRepository.save(team);
     }
 
     public Team update(Team team) {

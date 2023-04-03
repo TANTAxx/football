@@ -1,6 +1,7 @@
 package hu.football.services;
 
 import hu.football.exceptions.NotFoundException;
+import hu.football.model.dto.PlayerDto;
 import hu.football.model.entities.Player;
 import hu.football.model.entities.Team;
 import hu.football.respositories.PlayerRepository;
@@ -19,6 +20,7 @@ import static hu.football.constants.ErrorConstants.INVALID_FIRST_NAME_OR_LAST_NA
 public class PlayerService {
 
     private final PlayerRepository playerRepository;
+    private final TeamService teamService;
 
     public Player findById(Long id) {
         log.info("Find by id: {} ", id);
@@ -34,7 +36,24 @@ public class PlayerService {
         return playerRepository.findAll();
     }
 
-    public Player create(Player player) {
+    public Player create(PlayerDto playerDto) {
+
+        Team teamName = teamService.getByTeamName(playerDto.getTeam());
+        Player player = new Player(
+                playerDto.getFirstName(),
+                playerDto.getLastName(),
+                playerDto.getNationality(),
+                playerDto.getDateOfBirth(),
+                playerDto.getAge(),
+                playerDto.getCountryOfBirth(),
+                playerDto.getPlaceOfBirth(),
+                playerDto.getPosition(),
+                playerDto.getHeight(),
+                playerDto.getWeight(),
+                playerDto.getFoot(),
+                teamName
+        );
+
         return playerRepository.save(player);
     }
 

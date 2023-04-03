@@ -21,23 +21,23 @@ public class TeamController {
     private final TeamService teamService;
 
     @GetMapping
-    public ResponseEntity<List<Team>> getAllPlayer() {
+    public ResponseEntity<List<Team>> getAllTeam() {
         return ResponseEntity.ok(teamService.findAllTeam());
     }
 
     @GetMapping(path = "/name")
-    public ResponseEntity<List<Team>> getPlayer(@RequestParam("teamName") String teamName) {
+    public ResponseEntity<Team> getTeam(@RequestParam("teamName") String teamName) {
         return ResponseEntity.ok(teamService.getByTeamName(teamName));
     }
 
 
     @PostMapping(path = "/save")
-    public ResponseEntity<Team> savePlayer(@RequestBody TeamDto teamDto) {
+    public ResponseEntity<Team> saveTeam(@RequestBody TeamDto teamDto) {
         return ResponseEntity.status(201).body(teamService.saveTeam(teamDto));
     }
 
     @PutMapping(path = "/update")
-    public ResponseEntity<Team> updatePlayer(@RequestBody Team team) {
+    public ResponseEntity<Team> updateTeam(@RequestBody Team team) {
         return ResponseEntity.ok(teamService.update(team));
     }
 

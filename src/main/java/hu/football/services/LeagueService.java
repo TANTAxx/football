@@ -29,25 +29,7 @@ public class LeagueService {
     }
 
     public League create(League league) {
-        try {
-            log.info("idebe");
-            List<League> leagues = findAllLeague();
-            log.info("idebe" + leagues);
-            for (int i = leagues.size() - 1; i >= 0; i--) {
-                log.info("idebe2");
-                if (league.getLeagueName().equals(leagues.get(i).getLeagueName())) {
-                    log.info("League name reserved!");
-                    return null;
-                } else {
-                    log.info("New league save -> {} ", league);
-                    return leagueRepository.save(league);
-                }
-            }
-        } catch (Exception e) {
-            e.getMessage();
-            throw new NotFoundException("");
-        }
-        return null;
+        return leagueRepository.save(league);
     }
 
     public League update(League league) {
@@ -72,14 +54,15 @@ public class LeagueService {
     }
 
     public League getByLeagueName(String leagueName) {
-        League leagueOptional = leagueRepository.findByLeagueName(leagueName)
+        return leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new NotFoundException("Not found league name " + leagueName));
-        return toEntity(leagueOptional);
     }
 
     public League getByName(String leagueName) {
-        return leagueRepository.findByLeagueName(leagueName)
+        League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new NotFoundException("Not found league name " + leagueName));
+
+        return toEntity(league);
     }
 
 

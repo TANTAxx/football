@@ -65,4 +65,23 @@ public class Coach {
     @OneToOne
     private Team team;
 
+
+    public Coach(String firstName,
+                 String lastName,
+                 String nationality,
+                 String age,
+                 String placeOfBirth,
+                 String countryOfBirth,
+                 String dateOfBirth,
+                 Team team)
+    {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nationality = nationality;
+        this.age = age;
+        this.placeOfBirth = placeOfBirth;
+        this.countryOfBirth = countryOfBirth;
+        this.dateOfBirth = dateOfBirth;
+        this.team = team;
+    }
 }

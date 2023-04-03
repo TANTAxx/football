@@ -1,5 +1,6 @@
 package hu.football.model.dto;
 
+import hu.football.model.entities.League;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,7 @@ public class TeamDto {
     private String stadium;
 
     private String league;
+
+
 
 }

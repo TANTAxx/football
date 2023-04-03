@@ -1,5 +1,6 @@
 package hu.football.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +21,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 public class Player {
 
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = SEQUENCE)
     private Long id;
 
@@ -37,7 +39,7 @@ public class Player {
 
     @NotNull
     @NotBlank
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
 
     @NotNull
     @NotBlank
@@ -69,7 +71,34 @@ public class Player {
 
     @NotNull
     @NotBlank
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Team team;
+
+    public Player(String firstName,
+                  String lastName,
+                  String nationality,
+                  String dateOfBirth,
+                  String age,
+                  String countryOfBirth,
+                  String placeOfBirth,
+                  String position,
+                  String height,
+                  String weight,
+                  String foot,
+                  Team team)
+    {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nationality = nationality;
+        this.dateOfBirth = dateOfBirth;
+        this.age = age;
+        this.countryOfBirth = countryOfBirth;
+        this.placeOfBirth = placeOfBirth;
+        this.position = position;
+        this.height = height;
+        this.weight = weight;
+        this.foot = foot;
+        this.team = team;
+    }
 
 }

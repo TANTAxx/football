@@ -1,5 +1,6 @@
 package hu.football.controllers;
 
+import hu.football.model.dto.PlayerDto;
 import hu.football.model.entities.Player;
 import hu.football.model.entities.Team;
 import hu.football.services.PlayerService;
@@ -48,12 +49,12 @@ public class PlayerController {
     }
 
     @PostMapping
-    public ResponseEntity<Player> savePlayer(@RequestBody Player player){
-        return ResponseEntity.status(201).body(playerService.create(player));
+    public ResponseEntity<Player> savePlayer(@RequestBody PlayerDto playerDto) {
+        return ResponseEntity.status(201).body(playerService.create(playerDto));
     }
 
     @PutMapping(path = "/update")
-    public ResponseEntity<Player> updatePlayer(@RequestBody Player player){
+    public ResponseEntity<Player> updatePlayer(@RequestBody Player player) {
         return ResponseEntity.ok(playerService.update(player));
     }
 }

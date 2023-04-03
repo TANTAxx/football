@@ -20,8 +20,8 @@ public class Team {
     @GeneratedValue(strategy = SEQUENCE)
     private Long id;
 
-    @OneToOne
     @JoinColumn(name = "nationality")
+    @OneToOne(cascade = CascadeType.ALL)
     private League nationality;
 
     private String teamName;
@@ -46,4 +46,6 @@ public class Team {
         this.stadium = stadium;
         this.league = league;
     }
+
+
 }

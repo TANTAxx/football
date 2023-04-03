@@ -1,5 +1,6 @@
 package hu.football.controllers;
 
+import hu.football.model.dto.CoachDto;
 import hu.football.model.entities.Coach;
 import hu.football.services.CoachService;
 import lombok.AllArgsConstructor;
@@ -37,13 +38,13 @@ public class CoachController {
     }
 
     @PostMapping(path = "/save")
-    public ResponseEntity<Coach> saveCoach(@RequestBody Coach coach){
-        return ResponseEntity.status(201).body(coachService.create(coach));
+    public ResponseEntity<Coach> saveCoach(@RequestBody CoachDto coachDto){
+        return ResponseEntity.status(201).body(coachService.create(coachDto));
     }
 
     @PostMapping(path = "/update")
     public ResponseEntity<Coach> updateCoach(@RequestBody Coach coach){
-        return ResponseEntity.ok(coachService.create(coach));
+        return ResponseEntity.ok(coachService.update(coach));
     }
 
     @DeleteMapping("/{id}")
