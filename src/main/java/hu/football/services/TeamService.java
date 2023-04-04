@@ -3,14 +3,11 @@ package hu.football.services;
 import hu.football.exceptions.NotFoundException;
 import hu.football.exceptions.ValidationException;
 import hu.football.model.dto.FieldError;
-import hu.football.model.dto.LeagueDto;
 import hu.football.model.dto.TeamDto;
-import hu.football.model.entities.League;
 import hu.football.model.entities.Team;
 import hu.football.respositories.TeamRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.NestedExceptionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -18,8 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static hu.football.constants.ErrorConstants.INVALID_FIRST_NAME_OR_LAST_NAME;
-import static hu.football.constants.ErrorConstants.INVALID_TEAM_NAME;
+import static hu.football.constants.ErrorConstants.*;
 
 @Slf4j
 @Service
@@ -55,15 +51,15 @@ public class TeamService {
                     leagueService.getByLeagueName(teamDto.getLeague())
             );
             log.info("Team saved: {}", team);
-          return teamRepository.save(team);
+            return teamRepository.save(team);
         } else {
-            throw new ValidationException(Collections.singletonList(new FieldError("Team Name", "Duplicated Team Name")));
+            throw new ValidationException(Collections.singletonList(new FieldError("TEAM_NAME", DUPLICATED_TEAM_NAME)));
         }
     }
 
     public Team update(Team team) {
         if (Objects.isNull(team.getTeamName())) {
-            throw new NotFoundException(INVALID_FIRST_NAME_OR_LAST_NAME);
+            throw new NotFoundException(INVALID_FIRST_NAME_AND_LAST_NAME);
         } else {
             return teamRepository.save(team);
         }

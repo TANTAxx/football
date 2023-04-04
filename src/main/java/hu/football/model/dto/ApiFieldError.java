@@ -1,5 +1,6 @@
 package hu.football.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiFieldError extends ApiError {
+public class ApiFieldError{
+
+    @JsonProperty("Errors")
     private List<FieldError> validationErrors;
 }

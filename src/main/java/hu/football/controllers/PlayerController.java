@@ -26,7 +26,7 @@ public class PlayerController {
     }
 
     @GetMapping(path = "/findByName")
-    public ResponseEntity<List<Player>> getPlayer(@RequestParam("firstName") String firstName,
+    public ResponseEntity<Player> getPlayer(@RequestParam("firstName") String firstName,
                                                   @RequestParam("lastName") String lastName) {
         return ResponseEntity.ok(playerService.findPlayerByFirstAndLastName(firstName, lastName));
     }

@@ -1,7 +1,9 @@
 package hu.football.services;
 
 import hu.football.exceptions.NotFoundException;
+import hu.football.exceptions.ValidationException;
 import hu.football.mappers.LeagueMapper;
+import hu.football.model.dto.FieldError;
 import hu.football.model.dto.LeagueDto;
 import hu.football.model.entities.League;
 import hu.football.respositories.LeagueRepository;
@@ -9,12 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
-import static hu.football.constants.ErrorConstants.INVALID_LEAGUE_NAME_OR_NATIONALITY;
+import static hu.football.constants.ErrorConstants.*;
 
 @Slf4j
 @Service
@@ -33,7 +32,7 @@ public class LeagueService {
         if (!leagueRepository.existsByLeagueName(league.getLeagueName())) {
             return leagueRepository.save(league);
         } else {
-            return null;
+            throw new ValidationException(Collections.singletonList(new FieldError("LEAGUE_NAME", DUPLICATED_LEAGUE_NAME)));
         }
     }
 

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-import static hu.football.constants.ErrorConstants.INVALID_FIRST_NAME_OR_LAST_NAME;
+import static hu.football.constants.ErrorConstants.INVALID_FIRST_NAME_AND_LAST_NAME;
 
 @Slf4j
 @Service
@@ -44,7 +44,7 @@ public class CoachService {
 
     public Coach update(Coach coach) {
         if (Objects.isNull(coach.getFirstName()) || Objects.isNull(coach.getLastName())) {
-            throw new NotFoundException(INVALID_FIRST_NAME_OR_LAST_NAME);
+            throw new NotFoundException(INVALID_FIRST_NAME_AND_LAST_NAME);
         } else {
             return coachRepository.save(coach);
         }
@@ -53,7 +53,7 @@ public class CoachService {
     public List<Coach> findByFirstAndLastName(String firstName, String lastName) {
         log.info("Find by first and last name: {} {} ", firstName, lastName);
         if (Objects.isNull(firstName) || Objects.isNull(lastName)) {
-            throw new NotFoundException(INVALID_FIRST_NAME_OR_LAST_NAME);
+            throw new NotFoundException(INVALID_FIRST_NAME_AND_LAST_NAME);
         } else {
             return coachRepository.findCoachByFirstNameAndLastName(firstName, lastName);
         }

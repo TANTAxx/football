@@ -47,8 +47,6 @@ public class ExceptionController {
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiFieldError> handleClientNotValidException(ValidationException ex) {
         ApiFieldError error = new ApiFieldError();
-        error.setTimestamp(LocalDateTime.now());
-        error.setMessage(ex.getMessage());
         error.setValidationErrors(ex.getErrors());
         log.error(ex.getMessage());
 
@@ -72,7 +70,6 @@ public class ExceptionController {
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.error("{}", NestedExceptionUtils.getMostSpecificCause(ex).getMessage());
         ex.printStackTrace();
-
         ApiError apiError = ApiError.builder()
                 .timestamp(LocalDateTime.now())
                 .message(NestedExceptionUtils.getMostSpecificCause(ex).getMessage())
