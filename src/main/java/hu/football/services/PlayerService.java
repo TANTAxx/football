@@ -40,7 +40,7 @@ public class PlayerService {
     }
 
     public Player create(PlayerDto playerDto) {
-        if (!playerRepository.existsByFirstNameAndLastNameAndTeam(playerDto.getFirstName(), playerDto.getLastName(), playerDto.getTeam())) {
+        if (!playerRepository.existsByFirstNameAndLastName(playerDto.getFirstName(), playerDto.getLastName())) {
             Team teamName = teamService.getByTeamName(playerDto.getTeam());
             Player player = new Player(
                     playerDto.getFirstName(),

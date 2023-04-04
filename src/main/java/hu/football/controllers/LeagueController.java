@@ -52,8 +52,4 @@ public class LeagueController {
     }
 
 
-    @GetMapping(path = "/equals")
-    public League getLeague(@RequestParam(name = "leagueName") String leagueName) {
-        return leagueService.getLeagueEquals(leagueName);
-    }
 }

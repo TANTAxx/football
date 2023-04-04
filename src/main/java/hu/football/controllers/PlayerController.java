@@ -35,9 +35,9 @@ public class PlayerController {
     public ResponseEntity<Player> searchPlayer(
             @RequestParam("lastName") String lastName,
             @RequestParam("firstName") String firstName,
-            @RequestParam("nationality") String nationality,
-            @RequestParam("position") String position,
-            @RequestParam("team") Team team
+            @RequestParam(value = "nationality", defaultValue = "null") String nationality,
+            @RequestParam(value = "position", defaultValue = "null") String position,
+            @RequestParam(value = "team", defaultValue = "null") Team team
     ) {
         return ResponseEntity.ok(playerService.searchPlayer(
                 firstName,

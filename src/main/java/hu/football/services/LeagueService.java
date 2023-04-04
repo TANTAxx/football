@@ -38,19 +38,25 @@ public class LeagueService {
 
     public League update(League league) {
         if (Objects.isNull(league.getLeagueName()) && Objects.isNull(league.getNationality())) {
-            throw new NotFoundException(INVALID_LEAGUE_NAME_OR_NATIONALITY);
+            throw new NotFoundException(INVALID_LEAGUE_NAME_AND_NATIONALITY);
         } else {
-            log.info("Save ág: {}", league);
             return leagueRepository.save(league);
         }
     }
 
     public League findByLeagueNameAndNationaly(String leagueName, String nationality) {
-        log.info("Find by first and last name: {} {} ", leagueName, nationality);
-        if (Objects.isNull(leagueName) && Objects.isNull(nationality)) {
-            throw new NotFoundException(INVALID_LEAGUE_NAME_OR_NATIONALITY);
-        } else {
+
+        try {
             return leagueRepository.findByLeagueNameAndAndNationality(leagueName, nationality);
+
+        } catch (RuntimeException e) {
+            if (Objects.isNull(leagueName)) {
+                throw new ValidationException(Collections.singletonList(new FieldError("INVALID_LEAGUE_NAME", INVALID_LEAGUE_NAME)));
+            } else if (Objects.isNull(nationality)) {
+                throw new ValidationException(Collections.singletonList(new FieldError("INVALID_NATIONALITY", INVALID_NATIONALITY)));
+            } else {
+                throw new ValidationException(Collections.singletonList(new FieldError("INVALID_LEAGUE_NAME_AND_NATIONALITY", INVALID_LEAGUE_NAME_AND_NATIONALITY)));
+            }
         }
     }
 
@@ -60,26 +66,33 @@ public class LeagueService {
 
     public League getByLeagueName(String leagueName) {
         Optional<League> leagueNameOp = leagueRepository.findByLeagueName(leagueName);
-        leagueNameOp.orElseThrow(() -> new NotFoundException("Not found league name " + leagueName));
 
-        if (leagueNameOp.isPresent()) {
+        try {
             return leagueNameOp.get();
-        } else {
-            return null;
+        } catch (RuntimeException e) {
+            if (!leagueRepository.existsByLeagueName(leagueName)) {
+                throw new ValidationException(Collections.singletonList(new FieldError("NOT_EXISTS_LEAGUE_NAME", NOT_EXISTS_LEAGUE_NAME)));
+            } else if (!leagueNameOp.isPresent()) {
+                throw new ValidationException(Collections.singletonList(new FieldError("NOT_FOUND_LEAGUE_NAME", NOT_FOUND_LEAGUE_NAME)));
+            }
         }
+        return null;
     }
 
-    public League getByName(String leagueName) {
-        Optional<League> league = leagueRepository.findByLeagueName(leagueName);
-        league.orElseThrow(() -> new NotFoundException("Not found league name " + leagueName));
+    public League getByLeagueNationality(String nationality) {
+        Optional<League> leagueOptional = leagueRepository.findByNationality(nationality);
 
-        if (league.isPresent()) {
-            return toEntity(league.get());
-        } else {
-            return null;
+        try {
+            return leagueOptional.get();
+        } catch (RuntimeException e) {
+            if (!leagueOptional.isPresent()) {
+                throw new ValidationException(Collections.singletonList(new FieldError("NOT_FOUND_NATIONALITY", NOT_FOUND_NATIONALITY)));
+            } else if (!leagueRepository.existsByNationality(nationality)) {
+                throw new ValidationException(Collections.singletonList(new FieldError("NOT_EXISTS_NATIONALITY", NOT_EXISTS_NATIONALITY)));
+            }
         }
+        return null;
     }
-
 
     private LeagueDto entityToDto(League league) {
         return leagueMapper.toDto(league);
@@ -90,19 +103,6 @@ public class LeagueService {
         return leagueMapper.toEntity(leagueDto);
     }
 
-    public League getByLeagueNationality(String nationality) {
-        Optional<League> leagueOptional = leagueRepository.findByNationality(nationality);
-
-        if (leagueOptional.isPresent()) {
-            return leagueOptional.get();
-        } else {
-            return null;
-        }
-    }
-
-    public League getLeagueEquals(String leagueName) {
-        return leagueRepository.findByLeagueNameEquals(leagueName);
-    }
 }
 
 
