@@ -17,7 +17,6 @@ public interface LeagueRepository extends JpaRepository<League, Long> {
 
     Optional<League> findByNationality(String nationality);
 
-
     Boolean existsByNationality(String nationality);
 
 }

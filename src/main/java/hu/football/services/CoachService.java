@@ -1,17 +1,21 @@
 package hu.football.services;
 
 import hu.football.exceptions.NotFoundException;
+import hu.football.exceptions.ValidationException;
 import hu.football.model.dto.CoachDto;
+import hu.football.model.dto.FieldError;
 import hu.football.model.entities.Coach;
+import hu.football.model.entities.Team;
 import hu.football.respositories.CoachRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static hu.football.constants.ErrorConstants.INVALID_FIRST_NAME_AND_LAST_NAME;
+import static hu.football.constants.ErrorConstants.*;
 
 @Slf4j
 @Service
@@ -24,10 +28,13 @@ public class CoachService {
         return coachRepository.findAll();
     }
 
-    public Coach create(CoachDto coachDto) {
+    public Boolean existsCoach(String fistName, String lastName, Team team) {
+        return coachRepository.existsByFirstNameAndLastNameAndTeam(fistName, lastName, team);
+    }
 
+    public Coach create(CoachDto coachDto) {
         log.info("Coach save: ");
-        Coach coach =  new Coach(
+        Coach coach = new Coach(
                 coachDto.getFirstName(),
                 coachDto.getLastName(),
                 coachDto.getNationality(),
@@ -39,8 +46,13 @@ public class CoachService {
         );
         log.info("Coach Saved: {}", coachDto);
 
-        return coachRepository.save(coach);
+        if (existsCoach(coach.getFirstName(), coach.getLastName(), coach.getTeam())) {
+            throw new ValidationException(Collections.singletonList(new FieldError("COACH_EXISTS", COACH_EXISTS)));
+        } else {
+            return coachRepository.save(coach);
+        }
     }
+
 
     public Coach update(Coach coach) {
         if (Objects.isNull(coach.getFirstName()) || Objects.isNull(coach.getLastName())) {
@@ -53,10 +65,18 @@ public class CoachService {
     public List<Coach> findByFirstAndLastName(String firstName, String lastName) {
         log.info("Find by first and last name: {} {} ", firstName, lastName);
         if (Objects.isNull(firstName) || Objects.isNull(lastName)) {
-            throw new NotFoundException(INVALID_FIRST_NAME_AND_LAST_NAME);
+            if (existsCoachName(firstName, lastName)) {
+                throw new ValidationException(Collections.singletonList(new FieldError("COACH_NOT_EXISTS",COACH_NOT_EXISTS )));
+            } else {
+                return coachRepository.findCoachByFirstNameAndLastName(firstName, lastName);
+            }
         } else {
-            return coachRepository.findCoachByFirstNameAndLastName(firstName, lastName);
+            throw new NotFoundException(INVALID_FIRST_NAME_AND_LAST_NAME);
         }
+    }
+
+    private Boolean existsCoachName(String firstName, String lastName) {
+        return coachRepository.existsByFirstNameAndLastName(firstName, lastName);
     }
 
     public Coach findById(Long id) {

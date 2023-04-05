@@ -17,4 +17,7 @@ public class ErrorConstants {
     public static final String INVALID_LEAGUE_NAME = "Invalid league name!";
     public static final String NOT_FOUND_NATIONALITY = "Not found nationality";
     public static final String NOT_EXISTS_NATIONALITY = "Not exists nationality!";
+    public static final String COACH_EXISTS = "Coach name and team is exists!";
+    public static final String COACH_NOT_EXISTS = "Coach is not exists!";
 }
+

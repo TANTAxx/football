@@ -74,7 +74,7 @@ public class PlayerService {
     public Player findPlayerByFirstAndLastName(String firstName, String lastName) {
         try {
             if (!playerRepository.existsByFirstNameAndLastName(firstName, lastName)) {
-                throw new ValidationException(Collections.singletonList(new FieldError("Not Exists Name", NOT_EXISTS_NAME)));
+                throw new ValidationException(Collections.singletonList(new FieldError("Not Exists Player", NOT_EXISTS_NAME)));
             } else {
                 return playerRepository.findByFirstNameAndLastName(firstName, lastName);
             }
@@ -99,27 +99,25 @@ public class PlayerService {
             Team team
     ) {
 
+        boolean objectFLNull = Objects.isNull(firstName) && Objects.isNull(lastName);
         try {
-            if (!playerRepository.existsByFirstNameAndLastName(firstName, lastName) &&
-                    (Objects.isNull(nationality) && Objects.isNull(position) && Objects.isNull(team.getTeamName()))) {
-                throw new ValidationException(Collections.singletonList(new FieldError("Not Exists Name", NOT_EXISTS_NAME)));
-            } else if (Objects.isNull(findPlayerByFirstAndLastName(firstName, lastName)) &&
-                    (Objects.nonNull(nationality) && Objects.nonNull(position) && Objects.nonNull(team.getTeamName()))) {
-                return playerRepository.findPlayerByNationalityAndPositionAndTeam(nationality, position, team.getTeamName());
+            if (Objects.nonNull(firstName) && Objects.nonNull(lastName) &&
+                    Objects.nonNull(nationality) && Objects.nonNull(position) && Objects.nonNull(team.getTeamName())) {
+                return playerRepository.findByFirstNameAndLastNameAndNationalityAndPositionAndTeam(firstName, lastName, nationality, position, team);
             } else {
-                if (Objects.nonNull(findPlayerByFirstAndLastName(firstName, lastName)) &&
-                        (Objects.isNull(nationality) && Objects.isNull(position) && Objects.isNull(team.getTeamName()))) {
-                    return playerRepository.findByFirstNameAndLastName(firstName, lastName);
+                if (objectFLNull) {
+                    return playerRepository.findPlayerByNationalityAndPositionAndTeam(nationality, position, team.getTeamName());
+                } else if (Objects.isNull(nationality) && Objects.isNull(position) && Objects.isNull(team.getTeamName())) {
+                    return findPlayerByFirstAndLastName(firstName, lastName);
                 } else {
-                    return playerRepository.findByFirstNameAndLastNameAndNationalityAndPositionAndTeam
-                            (firstName, lastName, nationality, position, team);
+                    return null;
                 }
             }
         } catch (RuntimeException e) {
             if (Objects.isNull(findPlayerByFirstAndLastName(firstName, lastName)) &&
                     (Objects.isNull(nationality) && Objects.isNull(position) && Objects.isNull(team.getTeamName()))) {
                 throw new ValidationException(Collections.singletonList(new FieldError("ALL_OBJECTS_IS_NULL", ALL_OBJECTS_IS_NULL)));
-            } else if (Objects.isNull(firstName) && Objects.isNull(lastName)) {
+            } else if (objectFLNull) {
                 throw new ValidationException(Collections.singletonList(new FieldError("INVALID_FIRST_NAME_AND_LAST_NAME", INVALID_FIRST_NAME_AND_LAST_NAME)));
             }
         }
