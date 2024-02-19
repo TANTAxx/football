@@ -1,10 +1,9 @@
 package hu.football.controllers;
 
-import hu.football.model.dto.LeagueDto;
-import hu.football.model.entities.League;
-import hu.football.services.LeagueService;
+import hu.football.models.dto.football.LeagueDto;
+import hu.football.models.entities.football.League;
+import hu.football.services.football.LeagueService;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,30 +25,22 @@ public class LeagueController {
         return ResponseEntity.ok(leagueService.findAllLeague());
     }
 
-    @GetMapping(path = "/league")
-    public ResponseEntity<League> getLeagueByLeagueName(@RequestParam("leagueName") String leagueName,
-                                                        @RequestParam("nationality") String nationality) {
-        return ResponseEntity.ok(leagueService.findByLeagueNameAndNationaly(leagueName, nationality));
+    @GetMapping(path = "/search")
+    public ResponseEntity<LeagueDto> searchLeague(@RequestParam(value = "leagueName") String leagueName,
+                                                        @RequestParam(value = "nationality" , required = false) String nationality) {
+        return ResponseEntity.ok(leagueService.searchLeague(leagueName, nationality));
     }
 
     @PostMapping(path = "/save")
-    public ResponseEntity<League> saveLeague(@RequestBody League league) {
-        return ResponseEntity.status(201).body(leagueService.create(league));
+    public ResponseEntity<LeagueDto> saveLeague(@RequestBody LeagueDto leagueDto) {
+        LeagueDto saveLeague = leagueService.saveLeague(leagueDto);
+        return new ResponseEntity<>(saveLeague, HttpStatus.CREATED);
     }
 
-    @PutMapping(path = "/update")
-    public ResponseEntity<League> updateLeague(@RequestBody League league) {
-        return ResponseEntity.ok(leagueService.update(league));
-    }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
         leagueService.deleteById(id);
-    }
-
-    @GetMapping(path = "/try")
-    public League tryToDto(@RequestBody League league) {
-        return leagueService.toEntity(league);
     }
 }

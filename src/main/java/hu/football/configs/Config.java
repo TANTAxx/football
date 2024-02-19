@@ -20,5 +20,16 @@ public class Config {
     public static class Football {
         private String secretUser;
         private String secretPass;
+        private String secretAdmin;
+        private String secretAdminPass;
+    }
+
+    @Getter
+    @Setter
+    public static class Jwt{
+        private String username;
+        private String password;
+        private String secret;
+        private Long validTo;
     }
 }

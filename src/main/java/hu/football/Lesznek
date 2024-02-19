@@ -1,0 +1,14 @@
+Frontend: lesz!
+    regisztráció, keresés..., login page(de nem uszály bejelntkezni! logout, isLogen kell(hogy mit tud bejelentkezéssel mit nem))
+
+Backend: készülöben!
+    felhasználó regisztráció, password decoder || encoder, login, roles--> admin, user, fájlból történő beolvasás,
+
+
+JWT_TOKEN_:
+
+    amelyek engedélyezve lesz alapból:
+
+
+
+    amelyek nem lesznek engedélyezve alapból:

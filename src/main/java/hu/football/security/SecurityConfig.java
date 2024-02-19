@@ -27,7 +27,13 @@ public class SecurityConfig {
                 .roles("USER")
                 .build();
 
-        return new InMemoryUserDetailsManager(user);
+        UserDetails admin = User.builder()
+                .username(config.getFootball().getSecretAdmin())
+                .password(passwordEncoder().encode(config.getFootball().getSecretAdminPass()))
+                .roles("ADMIN")
+                .build();
+
+        return new InMemoryUserDetailsManager(user, admin);
     }
 
     @Bean

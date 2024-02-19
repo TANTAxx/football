@@ -3,3 +3,7 @@ spring:
     name: Football Leagues
   profiles:
     active: dev
+
+
+server:
+  port: 8100

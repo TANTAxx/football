@@ -1,10 +1,11 @@
 package hu.football.controllers;
 
-import hu.football.model.entities.Player;
-import hu.football.model.entities.Team;
-import hu.football.services.PlayerService;
+import hu.football.models.dto.football.PlayerDto;
+import hu.football.models.entities.football.Player;
+import hu.football.services.football.PlayerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,36 +25,31 @@ public class PlayerController {
         return ResponseEntity.ok(playerService.findAllPlayer());
     }
 
-    @GetMapping(path = "/findByName")
-    public ResponseEntity<List<Player>> getPlayer(@RequestParam("firstName") String firstName,
-                                                  @RequestParam("lastName") String lastName) {
-        return ResponseEntity.ok(playerService.findPlayerByFirstAndLastName(firstName, lastName));
-    }
-
     @GetMapping(path = "/search")
-    public ResponseEntity<Player> searchPlayer(
-            @RequestParam("lastName") String lastName,
-            @RequestParam("firstName") String firstName,
-            @RequestParam("nationality") String nationality,
-            @RequestParam("position") String position,
-            @RequestParam("team") Team team
+    public ResponseEntity<PlayerDto> searchPlayer(
+            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "firstName", required = false) String firstName,
+            @RequestParam(value = "nationality", required = false) String nationality,
+            @RequestParam(value = "position", required = false) String position,
+            @RequestParam(value = "teamName", required = false) String teamName,
+            @RequestParam(value = "leagueName", required = false) String leagueName
     ) {
-        return ResponseEntity.ok(playerService.searchPlayer(
+        PlayerDto playerDto = playerService.searchPlayer(
                 firstName,
                 lastName,
                 nationality,
                 position,
-                team
-        ));
+                teamName,
+                leagueName
+        );
+
+        return ResponseEntity.ok(playerDto);
     }
 
     @PostMapping
-    public ResponseEntity<Player> savePlayer(@RequestBody Player player){
-        return ResponseEntity.status(201).body(playerService.create(player));
+    public ResponseEntity<PlayerDto> savePlayer(@RequestBody PlayerDto playerDto) {
+        PlayerDto save = playerService.savePlayer(playerDto);
+        return new ResponseEntity<>(save, HttpStatus.CREATED);
     }
 
-    @PutMapping(path = "/update")
-    public ResponseEntity<Player> updatePlayer(@RequestBody Player player){
-        return ResponseEntity.ok(playerService.update(player));
-    }
 }

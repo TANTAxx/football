@@ -1,9 +1,8 @@
 package hu.football.controllers;
 
-import hu.football.model.dto.TeamDto;
-import hu.football.model.entities.Player;
-import hu.football.model.entities.Team;
-import hu.football.services.TeamService;
+import hu.football.models.dto.football.TeamDto;
+import hu.football.models.entities.football.Team;
+import hu.football.services.football.TeamService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @RestController
@@ -21,29 +22,28 @@ public class TeamController {
     private final TeamService teamService;
 
     @GetMapping
-    public ResponseEntity<List<Team>> getAllPlayer() {
+    public ResponseEntity<List<Team>> getAllTeam() {
         return ResponseEntity.ok(teamService.findAllTeam());
     }
 
-    @GetMapping(path = "/name")
-    public ResponseEntity<List<Team>> getPlayer(@RequestParam("teamName") String teamName) {
-        return ResponseEntity.ok(teamService.getByTeamName(teamName));
+    @GetMapping("/search")
+    public ResponseEntity<TeamDto> searchTeam(@RequestParam(value = "teamName") String teamName,
+                                              @RequestParam(value = "nationality", required = false) String nationality) {
+
+        TeamDto searchTeam = teamService.findTeamByNameAndNationality(teamName, nationality);
+        return new ResponseEntity<>(searchTeam, OK);
     }
 
 
     @PostMapping(path = "/save")
-    public ResponseEntity<Team> savePlayer(@RequestBody TeamDto teamDto) {
-        return ResponseEntity.status(201).body(teamService.saveTeam(teamDto));
-    }
-
-    @PutMapping(path = "/update")
-    public ResponseEntity<Team> updatePlayer(@RequestBody Team team) {
-        return ResponseEntity.ok(teamService.update(team));
+    public ResponseEntity<TeamDto> saveTeam(@RequestBody TeamDto teamDto) {
+        TeamDto save = teamService.saveTeam(teamDto);
+        return new ResponseEntity<>(save, HttpStatus.CREATED);
     }
 
     @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id){
+    @ResponseStatus(NO_CONTENT)
+    public void deleteById(@PathVariable Long id) {
         teamService.deleteById(id);
     }
 }
